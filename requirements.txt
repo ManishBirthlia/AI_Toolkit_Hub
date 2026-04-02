@@ -1,0 +1,52 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# AI Utility Toolkit — Python Dependencies
+# Install all:  pip install -r requirements.txt
+# ─────────────────────────────────────────────────────────────────────────────
+
+# ── Core ──────────────────────────────────────────────────────────────────────
+python-dotenv>=1.0.0
+requests>=2.31.0
+
+# ── LLMs ─────────────────────────────────────────────────────────────────────
+openai>=1.30.0
+anthropic>=0.25.0
+groq>=0.9.0
+google-generativeai>=0.7.0
+
+# ── OCR ───────────────────────────────────────────────────────────────────────
+pytesseract>=0.3.10
+Pillow>=10.0.0
+easyocr>=1.7.0
+numpy>=1.24.0
+google-cloud-vision>=3.4.0
+# System: sudo apt install tesseract-ocr  /  brew install tesseract
+
+# ── AI Video ──────────────────────────────────────────────────────────────────
+opencv-python>=4.8.0
+
+# ── Text-to-Speech ────────────────────────────────────────────────────────────
+google-cloud-texttospeech>=2.16.0
+edge-tts>=6.1.9
+
+# ── Transcription ─────────────────────────────────────────────────────────────
+assemblyai>=0.29.0
+deepgram-sdk>=3.2.0
+# Local Whisper (optional): pip install openai-whisper
+# System for Whisper local: sudo apt install ffmpeg
+
+# ── Translation ───────────────────────────────────────────────────────────────
+deepl>=1.17.0
+google-cloud-translate>=3.15.0
+
+# ── Maps ──────────────────────────────────────────────────────────────────────
+googlemaps>=4.10.0
+
+# ── Video Downloader ──────────────────────────────────────────────────────────
+yt-dlp>=2024.1.0
+# System: sudo apt install ffmpeg  (required for audio extraction)
+
+# ── QR Code ───────────────────────────────────────────────────────────────────
+qrcode[pil]>=7.4.2
+segno>=1.6.1
+# Optional QR decoding: pip install pyzbar
+# System for pyzbar: sudo apt install libzbar0

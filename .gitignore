@@ -1,0 +1,39 @@
+# Environment
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# Runtime outputs
+downloads/
+output_*.mp3
+output_*.png
+output_*.md
+qr_*.png
+qr_*.svg
+
+# OS
+.DS_Store
+Thumbs.db
