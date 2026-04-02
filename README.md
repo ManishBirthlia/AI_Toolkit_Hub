@@ -227,7 +227,7 @@ print(transcript)
 translated = translate_text("Hello, world!", target_lang="hi")  # Hindi
 print(translated)
 ```
-
+s
 ### Chained Pipeline (Orchestration)
 
 ```python
