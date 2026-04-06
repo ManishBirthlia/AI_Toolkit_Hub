@@ -1,0 +1,15 @@
+{
+  "model": "claude-3-5-sonnet-latest",
+  "tools": {
+    "web_search": true,
+    "code_executor": true
+  },
+  "toolToggles": {
+    "allow_file_modifications": true,
+    "allow_command_execution": true
+  },
+  "hooks": {
+    "pre_tool": [],
+    "post_tool": []
+  }
+}
