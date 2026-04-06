@@ -273,7 +273,6 @@ Modules are designed to be piped together. The output of one module (e.g., a tra
 - Unified logging across all modules
 - Per-module unit tests
 - Clear separation of concerns (modules, utils, tests, examples)
-
 ---
 
 ## Roadmap
