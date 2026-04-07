@@ -27,7 +27,7 @@ async def test_bark():
     
     # The text we want to synthesize. Bark supports some non-speech sounds like [laughs], [sighs], etc.
     # sample_text = "Hello there! [laughs] This is a test of the Suno Bark text-to-speech engine running locally."
-    sample_text = "Yes! [laughs] By default, the suno-bark library aggressively offloads [anger] model layers back to your computer's system RAM..[crying] step-by-step to save GPU memory. But.. [sighs] since the models are being moved over the PCI-e bus thousands of times per generation, it crawls—which is exactly why it was taking 85 seconds for a ~10 word sentence."
+    sample_text = "Yes! By default, the suno-bark library aggressively offloads model layers back to your computer's system RAM step-by-step to save GPU memory. But since the models are being moved over the PCI-e bus thousands of times per generation, it crawls—which is exactly why it was taking 85 seconds for a ~10 word sentence."
     
     # The path where we will save the generated WAV file
     timestamp = int(time.time())
