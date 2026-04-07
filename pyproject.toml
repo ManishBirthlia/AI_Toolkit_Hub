@@ -36,6 +36,7 @@ dependencies = [
     "setuptools>=82.0.1",
     "suno-bark",
     "torch",
+    "torchaudio",
     "torchvision",
     "yt-dlp>=2026.3.3",
 ]
