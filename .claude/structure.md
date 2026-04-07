@@ -31,8 +31,10 @@ This file provides a clear tree-view mapping of all important logic and configur
    ├── LLMs/
    │   ├── __init__.py
    │   ├── ClaudeAI.py
+   │   ├── DeepSeekAI.py
    │   ├── GeminiAI.py
    │   ├── GroqAI.py
+   │   ├── NemotronAI.py
    │   ├── OllamaAI.py
    │   ├── OpenAI.py
    │   └── chat.py
@@ -89,6 +91,8 @@ This file provides a clear tree-view mapping of all important logic and configur
    ├── AI_Image/
    ├── AI_Video/
    ├── LLMs/
+   │   ├── test_deepseek.py
+   │   └── test_nemotron.py
    ├── Map/
    ├── OCRs/
    ├── QR_Generate/
