@@ -56,6 +56,7 @@ This file provides a clear tree-view mapping of all important logic and configur
    │   └── TinyURL.py
    ├── TTS/
    │   ├── __init__.py
+   │   ├── Bark.py
    │   ├── EdgeTTS.py
    │   ├── ElevenLabs.py
    │   └── GoogleTTS.py
@@ -93,6 +94,7 @@ This file provides a clear tree-view mapping of all important logic and configur
    ├── QR_Generate/
    ├── Short_Link/
    ├── TTS/
+   │   └── test_bark.py
    ├── Transcribe/
    ├── Translate/
    └── Video_Downloader/

@@ -1,8 +1,14 @@
 from typing import Optional
 import io
+import os
 import asyncio
 import functools
 import re
+
+# Dramatically speeds up generation on GPUs with >= 6GB VRAM by keeping models in VRAM
+# instead of transferring them over PCIe on every step.
+os.environ["SUNO_OFFLOAD_CPU"] = "False"
+os.environ["SUNO_USE_SMALL_MODELS"] = "True"
 
 try:
     import torch
