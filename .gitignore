@@ -37,3 +37,5 @@ qr_*.svg
 # OS
 .DS_Store
 Thumbs.db
+
+Samples/
