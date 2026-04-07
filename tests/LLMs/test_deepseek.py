@@ -27,7 +27,7 @@ def test_deepseek_chat():
 
     start = time.time()
     try:
-        reply = llm.chat(prompt=prompt, system=system, temperature=1, max_tokens=512)
+        reply = llm.chat(prompt=prompt, system=system, temperature=0.2, max_tokens=512)
         elapsed = time.time() - start
         print(f"Response ({elapsed:.2f}s):\n{reply}\n")
     except Exception as e:
