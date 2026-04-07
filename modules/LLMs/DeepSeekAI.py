@@ -23,7 +23,7 @@ class DeepSeekChat:
         logger.info(f"DeepSeekChat initialized | model='{self.model}'")
 
     def chat(self, prompt: str, system: Optional[str] = None,
-             temperature: float = 1.0, max_tokens: int = 18000) -> str:
+             temperature: float = 1.0, max_tokens: int = 18000, reasoning: bool = False) -> str:
         """
         Send a user message and return DeepSeek's reply.
 
@@ -32,6 +32,7 @@ class DeepSeekChat:
             system: Optional system prompt.
             temperature: Sampling temperature.
             max_tokens: Maximum tokens in the response.
+            reasoning: Whether to show reasoning.
 
         Returns:
             DeepSeek's response as a plain string, including the thinking block.
@@ -67,7 +68,7 @@ class DeepSeekChat:
             reasoning = getattr(message, "reasoning_content", "") or ""
 
             final_text = ""
-            if reasoning.strip():
+            if reasoning.strip() and reasoning:
                 reasoning_lines = reasoning.strip().split('\n')
                 reasoning_block = "\n".join([f"> {line}" for line in reasoning_lines])
                 final_text += f"> 🤔 **Thinking:**\n{reasoning_block}\n\n"

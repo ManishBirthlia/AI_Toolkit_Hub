@@ -29,6 +29,7 @@ dependencies = [
     "protobuf>=5.29.6",
     "pydantic-core>=2.41.5",
     "pytesseract>=0.3.10",
+    "pytest>=9.0.3",
     "python-dotenv>=1.0.0",
     "qrcode[pil]>=7.4.2",
     "requests>=2.31.0",
