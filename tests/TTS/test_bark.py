@@ -26,7 +26,7 @@ async def test_bark():
     tts = BarkTTS()
     
     # The text we want to synthesize. Bark supports some non-speech sounds like [laughs], [sighs], etc.
-    sample_text = "Hello there BABY! i Got you [laughs], Don't worry, This is a test of the Suno Bark text-to-speech engine running locally."
+    sample_text = "Hello there! [laughs] This is a test of the Suno Bark text-to-speech engine running locally."
     
     # The path where we will save the generated WAV file
     timestamp = int(time.time())
