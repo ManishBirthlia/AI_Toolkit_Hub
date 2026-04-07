@@ -19,6 +19,8 @@ _REQUIRED_KEYS: dict[str, str] = {
     "DEEPL_API_KEY":        "DeepL (Translate)",
     "BITLY_API_KEY":        "Bitly (Short_Link)",
     "REBRANDLY_API_KEY":    "Rebrandly (Short_Link)",
+    "NVIDIA_NEMOTRON_API_KEY": "NVIDIA Nemotron (LLMs)",
+    "NVIDIA_DEEPSEEK_API_KEY": "NVIDIA DeepSeek (LLMs)",
     "HF_TOKEN":             "HuggingFace (Local Models)",
 }
 

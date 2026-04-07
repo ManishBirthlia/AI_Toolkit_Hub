@@ -18,7 +18,7 @@ class NemotronChat:
         # Using OpenAI compatible client for Nvidia endpoint
         self.client = openai.OpenAI(
             base_url="https://integrate.api.nvidia.com/v1",
-            api_key=get_api_key("NVIDIA_SIMPLE_CHAT_API_KEY")
+            api_key=get_api_key("NVIDIA_NEMOTRON_API_KEY")
         )
         logger.info(f"NemotronChat initialized | model='{self.model}'")
 
