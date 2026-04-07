@@ -1,6 +1,11 @@
 import os
+import sys
 import asyncio
 import time
+
+# Add the project root to the Python path so it can find "modules" and "utils"
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
+
 from modules.TTS.Bark import BarkTTS
 from utils.logger import get_logger
 
