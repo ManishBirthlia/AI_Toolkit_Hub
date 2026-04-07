@@ -19,6 +19,7 @@ _REQUIRED_KEYS: dict[str, str] = {
     "DEEPL_API_KEY":        "DeepL (Translate)",
     "BITLY_API_KEY":        "Bitly (Short_Link)",
     "REBRANDLY_API_KEY":    "Rebrandly (Short_Link)",
+    "HF_TOKEN":             "HuggingFace (Local Models)",
 }
 
 
