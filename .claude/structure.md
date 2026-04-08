@@ -27,6 +27,7 @@ This file provides a clear tree-view mapping of all important logic and configur
    │   ├── RunwayML.py
    │   └── VideoAnalysis.py
    ├── Internet/
+   │   ├── GoogleTrends.py
    │   └── WebSearch.py
    ├── LLMs/
    │   ├── __init__.py
@@ -90,6 +91,8 @@ This file provides a clear tree-view mapping of all important logic and configur
    ├── __init__.py
    ├── AI_Image/
    ├── AI_Video/
+   ├── Internet/
+   │   └── test_google_trends.py
    ├── LLMs/
    │   ├── test_deepseek.py
    │   └── test_nemotron.py
