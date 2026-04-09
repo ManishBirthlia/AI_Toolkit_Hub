@@ -77,6 +77,19 @@ This file provides a clear tree-view mapping of all important logic and configur
        ├── __init__.py
        └── YtDlp.py
 
+📁 System Modules/           (Jarvis AI Agent — System-Level Tools)
+   ├── __init__.py           (Package init + get_all_tool_schemas())
+   ├── system.py             (open_application, run_command, get_system_info, kill_process)
+   ├── browser.py            (search_web, open_url, get_page_content)
+   ├── files.py              (read_file, write_file, move_file, delete_file, list_directory)
+   ├── keyboard.py           (type_text, press_hotkey, click, scroll, take_screenshot)
+   ├── vision.py             (capture_screen, find_text_on_screen, get_active_window_title, describe_screen_with_ai)
+   ├── email_tool.py         (send_email, read_latest_emails)
+   ├── clipboard.py          (copy_to_clipboard, paste_from_clipboard)
+   ├── audio.py              (speak, listen_for_command, transcribe_audio)
+   ├── memory.py             (save_memory, get_memory, list_all_memories, clear_memory)
+   └── requirements.txt      (Third-party dependencies for this package)
+
 📁 utils/                   (Helper Methods & Utilities)
    ├── __init__.py
    ├── config.py
