@@ -1,0 +1,37 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# System Modules — Third-Party Dependencies
+# Install all:  pip install -r requirements.txt
+# ─────────────────────────────────────────────────────────────────────────────
+
+# ── system.py ─────────────────────────────────────────────────────────────────
+psutil>=5.9.0               # System info, process management
+
+# ── browser.py ────────────────────────────────────────────────────────────────
+requests>=2.31.0            # HTTP page fetching
+beautifulsoup4>=4.12.0      # HTML parsing / text extraction
+
+# ── keyboard.py ───────────────────────────────────────────────────────────────
+pyautogui>=0.9.54           # Keyboard, mouse, screenshot automation
+
+# ── vision.py ─────────────────────────────────────────────────────────────────
+Pillow>=10.0.0              # Image processing
+pytesseract>=0.3.10         # OCR via Tesseract (also install Tesseract binary)
+anthropic>=0.25.0           # Optional: AI screen description via Claude
+
+# ── clipboard.py ──────────────────────────────────────────────────────────────
+pyperclip>=1.9.0            # Cross-platform clipboard access
+
+# ── audio.py ──────────────────────────────────────────────────────────────────
+pyttsx3>=2.90               # Offline text-to-speech
+SpeechRecognition>=3.10.0   # Microphone listening + Google STT
+PyAudio>=0.2.14             # Required by SpeechRecognition for mic access
+openai-whisper>=20231117    # Optional: local Whisper transcription (GPU recommended)
+
+# ── email_tool.py ─────────────────────────────────────────────────────────────
+# Uses only Python stdlib (smtplib, imaplib) — no extra packages needed.
+
+# ── files.py ──────────────────────────────────────────────────────────────────
+# Uses only Python stdlib (pathlib, shutil) — no extra packages needed.
+
+# ── memory.py ─────────────────────────────────────────────────────────────────
+# Uses only Python stdlib (json, pathlib) — no extra packages needed.
