@@ -5,7 +5,7 @@ import time
 # Add the project root to the Python path so it can find "modules" and "utils"
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
 
-from modules.LLMs.DeepSeekAI import DeepSeekChat
+from modules.LLMs.NvidiaDeepSeekAI import NvidiaDeepSeekAI
 
 import logging
 logging.basicConfig(level=logging.INFO)
@@ -17,7 +17,7 @@ def test_deepseek_chat():
     print("  DeepSeek Chat Test (Non-Streaming)")
     print("=" * 60)
 
-    llm = DeepSeekChat()
+    llm = NvidiaDeepSeekAI()
 
     prompt = "Explain what a neural network is in 2-3 sentences."
     system = "You are a concise AI tutor. Keep answers short and clear."
@@ -40,7 +40,7 @@ def test_deepseek_stream():
     print("  DeepSeek Stream Test")
     print("=" * 60)
 
-    llm = DeepSeekChat()
+    llm = NvidiaDeepSeekAI()
 
     prompt = "Write a haiku about coding."
 

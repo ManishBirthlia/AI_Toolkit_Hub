@@ -1,0 +1,171 @@
+# Gemma 4 31B-IT Local Module
+
+Add a new `GemmaLocal.py` module to `modules/LLMs/` that runs [google/gemma-4-31B-it](https://huggingface.co/google/gemma-4-31B-it) locally using HuggingFace Transformers.
+
+## User Review Required
+
+> [!CAUTION]
+> ### Hardware Feasibility — GTX 1660 Ti (6 GB VRAM)
+>
+> Gemma 4 31B-IT requires **~62 GB in FP16** or **~16-18 GB in 4-bit quantization**. Your GTX 1660 Ti has only **6 GB VRAM**. This means:
+>
+> | Strategy | VRAM Needed | Feasible? | Speed |
+> |---|---|---|---|
+> | FP16 (full precision) | ~62 GB | ❌ No | — |
+> | 8-bit (`bitsandbytes`) | ~31 GB | ❌ No | — |
+> | 4-bit (`bitsandbytes` NF4) | ~16-18 GB | ❌ No | — |
+> | 4-bit GPTQ/AWQ quantized variant | ~16-18 GB | ❌ No | — |
+> | **CPU offload** (`device_map="auto"` + enough RAM) | 6 GB GPU + **~30 GB+ system RAM** | ⚠️ Maybe | Very slow (~2-5 min/response) |
+> | **Full CPU only** (`device_map="cpu"`) | 0 GB GPU, **~35 GB+ RAM** | ⚠️ If RAM allows | Extremely slow |
+> | **GGUF via Ollama** (Q4_K_M quant) | ~4-6 GB GPU + RAM | ✅ Best option | Slow but usable |
+>
+> **Recommended paths (pick one):**
+> 1. **Use Ollama with a GGUF quantized Gemma 4 31B** — Your existing `OllamaAI.py` module already supports this. Just run `ollama pull gemma4:31b` and use `OllamaChat(model="gemma4:31b")`. This is the easiest path.
+> 2. **Use a smaller Gemma 4 variant** — `google/gemma-4-E4B-it` (4B effective params) fits comfortably in 6 GB and includes audio support.
+> 3. **Build the Transformers-based module anyway** — For users with beefier hardware (24+ GB VRAM). The module uses `device_map="auto"` so it will CPU-offload layers automatically if VRAM is insufficient, but will be slow.
+>
+> **Please confirm which approach you'd like me to implement.** The plan below assumes option **3** (full Transformers module) since it's the most complete and reusable, but I want to flag the hardware reality up front.
+
+> [!IMPORTANT]
+> ### `bitsandbytes` on Windows
+> The `bitsandbytes` library (used for 4-bit/8-bit quantization) has **limited Windows support**. The latest releases include Windows builds, but stability varies. If quantization fails, the module will fall back to `dtype="auto"` (FP16/BF16) which requires significantly more memory.
+
+## Proposed Changes
+
+### LLMs Module
+
+#### [NEW] [GemmaLocal.py](file:///d:/My%20Business/My%20Projects/On-Going/AI_Toolkit_Hub/modules/LLMs/GemmaLocal.py)
+
+A new class `GemmaLocalChat` following the exact same interface as `GeminiChat`, `OllamaChat`, etc. (`chat()`, `stream()`), plus multimodal capabilities unique to Gemma 4.
+
+**Class design:**
+
+```python
+class GemmaLocalChat:
+    """Local Gemma 4 provider via HuggingFace Transformers.
+    
+    Models: google/gemma-4-31B-it, google/gemma-4-E4B-it, google/gemma-4-E2B-it
+    """
+    DEFAULT_MODEL = "google/gemma-4-31B-it"
+
+    def __init__(self, model, quantize_4bit, enable_thinking, max_image_tokens, device_map)
+    def chat(self, prompt, system, temperature, max_tokens) -> str
+    def chat_with_image(self, prompt, image_source, system, temperature, max_tokens) -> str
+    def stream(self, prompt, system, temperature, max_tokens) -> Generator[str]
+    def get_device_info(self) -> dict   # Returns GPU/memory diagnostics
+```
+
+**Key implementation details:**
+
+- **Lazy model loading** — Model is loaded on first `chat()`/`stream()` call, not at `__init__`, to avoid blocking imports. Uses a module-level `_model_cache` dict keyed by model ID.
+- **HF Token** — Uses existing `HF_TOKEN` from `.env` via `get_api_key("HF_TOKEN")` (Gemma requires accepting the license on HuggingFace).
+- **Quantization** — Optional 4-bit NF4 quantization via `BitsAndBytesConfig` if `bitsandbytes` is installed; graceful fallback to `dtype="auto"` if not.
+- **Thinking mode** — Controlled via `enable_thinking` param in `apply_chat_template()`. When enabled, uses `processor.parse_response()` to separate thinking from final answer.
+- **Sampling** — Defaults follow Gemma 4 best practices: `temperature=1.0`, `top_p=0.95`, `top_k=64`.
+- **Multimodal** — `chat_with_image()` accepts a file path or URL, builds the correct message format with `{"type": "image", "url": ...}` before text.
+- **Streaming** — Uses `model.generate()` with `TextIteratorStreamer` from `transformers` for true token-by-token streaming.
+
+---
+
+#### [MODIFY] [\_\_init\_\_.py](file:///d:/My%20Business/My%20Projects/On-Going/AI_Toolkit_Hub/modules/LLMs/__init__.py)
+
+Add `GemmaLocalChat` to exports:
+
+```diff
+ from .OllamaAI import OllamaChat
++from .GemmaLocal import GemmaLocalChat
+ 
+-__all__ = ["OpenAIChat", "ClaudeChat", "GroqChat", "GeminiChat", "OllamaChat"]
++__all__ = ["OpenAIChat", "ClaudeChat", "GroqChat", "GeminiChat", "OllamaChat", "GemmaLocalChat"]
+```
+
+---
+
+### Configuration
+
+#### [MODIFY] [config.py](file:///d:/My%20Business/My%20Projects/On-Going/AI_Toolkit_Hub/utils/config.py)
+
+`HF_TOKEN` is already in `_REQUIRED_KEYS`. No changes needed.
+
+#### [MODIFY] [.env.example](file:///d:/My%20Business/My%20Projects/On-Going/AI_Toolkit_Hub/.env.example)
+
+Add Gemma-specific settings section after the existing Ollama block:
+
+```diff
+ OLLAMA_BASE_URL=http://localhost:11434
++
++# Gemma 4 Local — HuggingFace Transformers (requires HF_TOKEN with model access)
++# https://huggingface.co/google/gemma-4-31B-it
++HF_TOKEN=
++GEMMA_LOCAL_MODEL=google/gemma-4-31B-it
++GEMMA_LOCAL_QUANTIZE_4BIT=true
+```
+
+---
+
+### Dependencies
+
+#### [MODIFY] [requirements.txt](file:///d:/My%20Business/My%20Projects/On-Going/AI_Toolkit_Hub/requirements.txt)
+
+Add local LLM dependencies in a new section:
+
+```diff
++# ── Local LLMs (HuggingFace Transformers) ─────────────────────────────────────
++# Required for GemmaLocal (and future local model modules)
++transformers>=4.52.0
++accelerate>=1.6.0
++torch>=2.5.0
++bitsandbytes>=0.45.0       # Optional: 4-bit quantization (Windows support varies)
++torchvision>=0.20.0        # Optional: for image understanding
++huggingface-hub>=0.30.0
+```
+
+---
+
+### Tests
+
+#### [NEW] [test_gemma_local.py](file:///d:/My%20Business/My%20Projects/On-Going/AI_Toolkit_Hub/tests/LLMs/test_gemma_local.py)
+
+Following the exact pattern from `test_nemotron.py`:
+
+- `test_gemma_local_chat()` — Basic text completion
+- `test_gemma_local_stream()` — Streaming completion 
+- `test_gemma_local_thinking()` — Thinking mode on/off
+- `test_gemma_local_image()` — Image understanding (with a sample image URL)
+- `test_gemma_local_device_info()` — Print GPU/memory diagnostics
+
+---
+
+### Documentation
+
+#### [MODIFY] [structure.md](file:///d:/My%20Business/My%20Projects/On-Going/AI_Toolkit_Hub/.claude/structure.md)
+
+Add `GemmaLocal.py` to the LLMs directory tree.
+
+#### [MODIFY] [README.md](file:///d:/My%20Business/My%20Projects/On-Going/AI_Toolkit_Hub/README.md)
+
+Add a "Local LLMs" section documenting Gemma 4 setup (HF token, model download, quantization options).
+
+## Open Questions
+
+> [!IMPORTANT]
+> 1. **Which approach do you want?** Full Transformers module (plan above), Ollama-based (simplest), or the smaller E4B model (fits your GPU)?
+> 2. **How much system RAM do you have?** If running the 31B model with CPU offload, you'll need 32 GB+ RAM minimum.
+> 3. **Do you want the multimodal (image understanding) capability**, or is text-only sufficient for now? Image support adds `torchvision` as a dependency and uses `AutoModelForMultimodalLM` instead of `AutoModelForCausalLM`.
+
+## Verification Plan
+
+### Automated Tests
+```powershell
+# From project root
+python -m pytest tests/LLMs/test_gemma_local.py -v
+
+# Or run the test file directly  
+python tests/LLMs/test_gemma_local.py
+```
+
+### Manual Verification
+1. Run the test script with a simple prompt and verify output quality
+2. Check GPU memory usage during inference via `nvidia-smi`
+3. Test streaming output to confirm token-by-token delivery
+4. If multimodal is included, test with a sample image URL

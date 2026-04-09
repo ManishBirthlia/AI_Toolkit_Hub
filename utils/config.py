@@ -21,6 +21,7 @@ _REQUIRED_KEYS: dict[str, str] = {
     "REBRANDLY_API_KEY":    "Rebrandly (Short_Link)",
     "NVIDIA_NEMOTRON_API_KEY": "NVIDIA Nemotron (LLMs)",
     "NVIDIA_DEEPSEEK_API_KEY": "NVIDIA DeepSeek (LLMs)",
+    "NVIDIA_GEMMA_API_KEY": "NVIDIA Gemma (LLMs)",
     "HF_TOKEN":             "HuggingFace (Local Models)",
 }
 

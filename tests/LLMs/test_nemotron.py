@@ -5,7 +5,7 @@ import time
 # Add the project root to the Python path so it can find "modules" and "utils"
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
 
-from modules.LLMs.NemotronAI import NemotronChat
+from modules.LLMs.NvidiaNemotronAI import NvidiaNemotronAI
 
 import logging
 logging.basicConfig(level=logging.INFO)
@@ -17,7 +17,7 @@ def test_nemotron_chat():
     print("  Nemotron Chat Test (Non-Streaming)")
     print("=" * 60)
 
-    llm = NemotronChat()
+    llm = NvidiaNemotronAI()
 
     prompt = "Explain what a neural network is in 2-3 sentences."
     system = "You are a concise AI tutor. Keep answers short and clear."
@@ -40,7 +40,7 @@ def test_nemotron_stream():
     print("  Nemotron Stream Test")
     print("=" * 60)
 
-    llm = NemotronChat()
+    llm = NvidiaNemotronAI()
 
     prompt = "Write a haiku about coding."
 

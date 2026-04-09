@@ -8,34 +8,33 @@ from utils.logger import get_logger
 logger = get_logger(__name__)
 
 
-class DeepSeekChat:
-    """NVIDIA DeepSeek provider. Models: deepseek-ai/deepseek-v3.2"""
+class NvidiaNemotronAI:
+    """NVIDIA Nemotron provider. Models: nvidia/nemotron-3-nano-30b-a3b"""
 
-    DEFAULT_MODEL = "deepseek-ai/deepseek-v3.2"
+    DEFAULT_MODEL = "nvidia/nemotron-3-nano-30b-a3b"
 
     def __init__(self, model: str = DEFAULT_MODEL) -> None:
         self.model = model
         # Using OpenAI compatible client for Nvidia endpoint
         self.client = openai.OpenAI(
             base_url="https://integrate.api.nvidia.com/v1",
-            api_key=get_api_key("NVIDIA_DEEPSEEK_API_KEY")
+            api_key=get_api_key("NVIDIA_NEMOTRON_API_KEY")
         )
-        logger.info(f"DeepSeekChat initialized | model='{self.model}'")
+        logger.info(f"NvidiaNemotronAI initialized | model='{self.model}'")
 
     def chat(self, prompt: str, system: Optional[str] = None,
-             temperature: float = 1.0, max_tokens: int = 18000, thinking_show: bool = False) -> str:
+             temperature: float = 1.0, max_tokens: int = 18384) -> str:
         """
-        Send a user message and return DeepSeek's reply.
+        Send a user message and return Nemotron's reply.
 
         Args:
             prompt: The user message.
             system: Optional system prompt.
             temperature: Sampling temperature.
             max_tokens: Maximum tokens in the response.
-            thinking_show: Whether to show reasoning.
 
         Returns:
-            DeepSeek's response as a plain string, including the thinking block.
+            Nemotron's response as a plain string, including the thinking block.
 
         Raises:
             ValueError: If prompt is empty.
@@ -54,8 +53,8 @@ class DeepSeekChat:
             max_tokens=max_tokens,
             temperature=temperature,
             messages=messages,
-            top_p=0.95,
-            extra_body={"reasoning_budget": 16000, "chat_template_kwargs": {"thinking": True}}
+            top_p=1.0,
+            extra_body={"reasoning_budget": 16384, "chat_template_kwargs": {"enable_thinking": True}}
         )
 
         try:
@@ -68,7 +67,7 @@ class DeepSeekChat:
             reasoning = getattr(message, "reasoning_content", "") or ""
 
             final_text = ""
-            if reasoning.strip() and thinking_show:
+            if reasoning.strip():
                 reasoning_lines = reasoning.strip().split('\n')
                 reasoning_block = "\n".join([f"> {line}" for line in reasoning_lines])
                 final_text += f"> 🤔 **Thinking:**\n{reasoning_block}\n\n"
@@ -81,11 +80,11 @@ class DeepSeekChat:
         except RateLimitError as e:
             raise RuntimeError("Nvidia rate limit exceeded.") from e
         except OpenAIError as e:
-            raise RuntimeError(f"DeepSeek API error: {e}") from e
+            raise RuntimeError(f"Nemotron API error: {e}") from e
 
     def stream(self, prompt: str, system: Optional[str] = None,
-               temperature: float = 1.0, max_tokens: int = 18000):
-        """Stream DeepSeek's reply token by token."""
+               temperature: float = 1.0, max_tokens: int = 18384):
+        """Stream Nemotron's reply token by token."""
         if not prompt or not prompt.strip():
             raise ValueError("Prompt cannot be empty.")
 
@@ -99,8 +98,8 @@ class DeepSeekChat:
             max_tokens=max_tokens,
             temperature=temperature,
             messages=messages,
-            top_p=0.95,
-            extra_body={"reasoning_budget": 16000, "chat_template_kwargs": {"thinking": True}},
+            top_p=1.0,
+            extra_body={"reasoning_budget": 16384, "chat_template_kwargs": {"enable_thinking": True}},
             stream=True
         )
 
@@ -122,4 +121,4 @@ class DeepSeekChat:
                     yield content
 
         except OpenAIError as e:
-            raise RuntimeError(f"DeepSeek streaming failed: {e}") from e
+            raise RuntimeError(f"NvidiaNemotronAI streaming failed: {e}") from e

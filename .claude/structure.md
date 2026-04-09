@@ -32,13 +32,13 @@ This file provides a clear tree-view mapping of all important logic and configur
    ├── LLMs/
    │   ├── __init__.py
    │   ├── ClaudeAI.py
-   │   ├── DeepSeekAI.py
    │   ├── GeminiAI.py
    │   ├── GroqAI.py
-   │   ├── NemotronAI.py
+   │   ├── NvidiaDeepSeekAI.py
+   │   ├── NvidiaGemmaAI.py
+   │   ├── NvidiaNemotronAI.py
    │   ├── OllamaAI.py
-   │   ├── OpenAI.py
-   │   └── chat.py
+   │   └── OpenAI.py
    ├── Map/
    │   ├── __init__.py
    │   ├── GoogleMaps.py
