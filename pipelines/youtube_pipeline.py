@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+import httpx
 import requests
 from ddgs import DDGS
 from rich.console import Console
@@ -182,17 +183,31 @@ async def run_agent(client: AsyncOpenAI, system_prompt: str, user_prompt: str, t
     ]
     
     while True:
-        try:
-            response = await client.chat.completions.create(
-                model=PIPELINE_CONFIG["LLM_MODEL"],
-                messages=messages,
-                tools=tools,
-                temperature=0.7,
-                max_tokens=8000
-            )
-        except Exception as e:
-            console.print(f"[red]API Error: {e}[/red]")
-            return ""
+        # BETTER EXECUTION: Custom infinite-timeout and visual retry system.
+        # Catches NVIDIA server 504s immediately and retries with visual feedback.
+        for attempt in range(1, 11):  # Up to 10 manual retries
+            try:
+                response = await client.chat.completions.create(
+                    model=PIPELINE_CONFIG["LLM_MODEL"],
+                    messages=messages,
+                    tools=tools,
+                    temperature=0.7,
+                    max_tokens=8000
+                )
+                break  # Success, break out of retry loop
+            except Exception as e:
+                err_msg = str(e).lower()
+                if attempt == 10:
+                    console.print(f"\n[red]❌ Agent failed after 10 attempts: {e}[/red]")
+                    return ""
+                    
+                if "504" in err_msg or "timeout" in err_msg or "502" in err_msg or "503" in err_msg:
+                    wait = 2 ** attempt
+                    console.print(f"\n[yellow]⚠️ NVIDIA Server Overloaded (50x/Timeout). No limits applying! Retrying in {wait}s... (Attempt {attempt}/10)[/yellow]")
+                    await asyncio.sleep(wait)
+                else:
+                    console.print(f"\n[red]API Error: {e}[/red]")
+                    return ""
             
         choice = response.choices[0]
         message = choice.message
@@ -242,11 +257,12 @@ async def async_main():
         console.print("[red]Error: NVIDIA_DEEPSEEK_API_KEY environment variable is missing.[/red]")
         return
 
+    # Using httpx.Timeout(None) guarantees NO client-side logic limits the request duration
     client = AsyncOpenAI(
         base_url="https://integrate.api.nvidia.com/v1",
         api_key=PIPELINE_CONFIG["NVIDIA_API_KEY"],
-        timeout=120.0,
-        max_retries=3
+        timeout=httpx.Timeout(None), 
+        max_retries=0  # Disabled silent retries so our custom visual retry loop handles it
     )
     
     console.print(f"\n[bold cyan]🎥 YouTube Automation Pipeline (Powered by {PIPELINE_CONFIG['LLM_MODEL']})[/bold cyan]")
