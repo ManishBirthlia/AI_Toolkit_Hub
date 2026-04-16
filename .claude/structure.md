@@ -96,9 +96,9 @@ This file provides a clear tree-view mapping of all important logic and configur
    ├── helpers.py
    └── logger.py
 
-📁 examples/                (Usage Demonstrations)
-   ├── __init__.py
-   └── pipeline_demo.py
+📁 pipelines/               (End-to-End Workflows)
+   ├── youtube_pipeline.py
+   ├── youtube_requirements.txt
 
 📁 tests/                   (Test Cases)
    ├── __init__.py
